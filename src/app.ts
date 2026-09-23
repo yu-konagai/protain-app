@@ -19,7 +19,7 @@ type ProtainType={
 
 let Protains:ProtainType[]=[];
 let editID:number|null=null;
-form.addEventListener("click",()=>{
+form.addEventListener("submit",()=>{
 
     if(editID!==null){
         Protains=Protains.map((protain)=>{
@@ -63,6 +63,7 @@ form.addEventListener("click",()=>{
     inprotainInput.value="";
     gramInput.value="";
 renderProtain();
+saveProtains();
 })
 
 
@@ -70,7 +71,7 @@ function saveProtains(){
     localStorage.setItem("Protains",
         JSON.stringify(Protains));
 }
-const savedProtains=localStorage.getItem("saveProtains")
+const savedProtains=localStorage.getItem("Protains")
 if(savedProtains){
     Protains=JSON.parse(savedProtains)
 }
@@ -90,6 +91,7 @@ if(savedProtains){
         protain.tags.forEach((tag)=>{
             const tagsSpan=document.createElement("span");
             tagsSpan.textContent=`#${tag}`
+            tagsSpan.className="tag";
             tagsSpan.addEventListener("click",()=>{
                 const tagsFilter =Protains.filter((protain)=>{
                     return protain.tags.includes(tag);
@@ -105,7 +107,8 @@ if(savedProtains){
    Protains=Protains.filter((item)=>{
        return protain.id !== item.id;
     })
-   renderProtain(Protains);}) 
+   renderProtain(Protains);
+   saveProtains();}) 
     
     const editButton=document.createElement("button");
     editButton.textContent="編集";
@@ -123,6 +126,7 @@ if(savedProtains){
     favoriteButton.addEventListener("click",()=>{
     protain.isFavorite =!protain.isFavorite;
     renderProtain();
+    saveProtains();
 
     })
     div.appendChild(favoriteButton)
@@ -138,3 +142,4 @@ if(savedProtains){
         renderProtain(searchFilter);
     })
  renderProtain();
+saveProtains();

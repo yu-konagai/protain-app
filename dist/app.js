@@ -8,7 +8,7 @@ const protainList = document.getElementById("protain-list");
 const cospa = document.getElementById("cospa");
 let Protains = [];
 let editID = null;
-form.addEventListener("click", () => {
+form.addEventListener("submit", () => {
     if (editID !== null) {
         Protains = Protains.map((protain) => {
             if (editID == protain.id) {
@@ -40,14 +40,15 @@ form.addEventListener("click", () => {
     });
     titleInput.value = "";
     tagsInput.value = "";
-    inprotainInput.value;
+    inprotainInput.value = "";
     gramInput.value = "";
     renderProtain();
+    saveProtains();
 });
 function saveProtains() {
     localStorage.setItem("Protains", JSON.stringify(Protains));
 }
-const savedProtains = localStorage.getItem("saveProtains");
+const savedProtains = localStorage.getItem("Protains");
 if (savedProtains) {
     Protains = JSON.parse(savedProtains);
 }
@@ -65,6 +66,7 @@ function renderProtain(displayProtains = Protains) {
         protain.tags.forEach((tag) => {
             const tagsSpan = document.createElement("span");
             tagsSpan.textContent = `#${tag}`;
+            tagsSpan.className = "tag";
             tagsSpan.addEventListener("click", () => {
                 const tagsFilter = Protains.filter((protain) => {
                     return protain.tags.includes(tag);
@@ -81,6 +83,7 @@ function renderProtain(displayProtains = Protains) {
                 return protain.id !== item.id;
             });
             renderProtain(Protains);
+            saveProtains();
         });
         const editButton = document.createElement("button");
         editButton.textContent = "編集";
@@ -98,6 +101,7 @@ function renderProtain(displayProtains = Protains) {
         favoriteButton.addEventListener("click", () => {
             protain.isFavorite = !protain.isFavorite;
             renderProtain();
+            saveProtains();
         });
         div.appendChild(favoriteButton);
     });
@@ -109,4 +113,5 @@ searchInput.addEventListener("input", () => {
     renderProtain(searchFilter);
 });
 renderProtain();
+saveProtains();
 export {};
